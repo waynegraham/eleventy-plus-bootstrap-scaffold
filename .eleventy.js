@@ -62,6 +62,8 @@ module.exports = function (eleventyConfig) {
       appType: 'mpa', // New in v2.0.0
       assetsInclude: ['**/*.xml', '**/*.txt', 'CNAME'],
 
+      // plugins: [pagefind()],
+
       server: {
         mode: 'development',
         middlewareMode: true

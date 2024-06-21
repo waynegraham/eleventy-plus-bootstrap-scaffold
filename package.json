@@ -10,11 +10,17 @@
     "watch": "eleventy --watch",
     "serve": "eleventy --serve",
     "bench": "DEBUG=Eleventy:Benchmark* eleventy",
-    "build": "eleventy",
+    "build": "eleventy && npx pagefind --site _site",
+    "build:index": "npx pagefind --site _site",
     "clean": "del-cli _site",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["11ty", "eleventy", "bootstrap", "vite"],
+  "keywords": [
+    "11ty",
+    "eleventy",
+    "bootstrap",
+    "vite"
+  ],
   "author": "Wayne Graham",
   "license": "MIT",
   "description": "A clean and simple Eleventy 2 starter with Bootstrap",
@@ -40,6 +46,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.3"
+    "bootstrap": "^5.3.3",
+    "pagefind": "^1.1.0"
   }
 }
