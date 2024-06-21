@@ -1,23 +1,42 @@
 ---
 layout: base
 ---
+
 <div class="container mb-5">
-    <div class="row">
+  <div class="row">
     <article class="mt-5 col-sm-8">
-        {{ content | safe }}
+      <h1>{{ title }}</h1>
+
+      <ul class="post-metadata">
+        <li>
+          <time datetime="{{ page.date | htmlDateString }}">{{
+            page.date | readableDate
+          }}</time>
+        </li>
+        {%- for tag in tags | filterTagList %} {%- set tagUrl %}/tags/{{
+          tag | slugify
+        }}/{% endset %}
+        <li>
+          <a href="{{ tagUrl }}" class="post-tag">{{ tag }}</a
+          >{%- if not loop.last %}, {% endif %}
+        </li>
+        {%- endfor %}
+      </ul>
+
+      {{ content | safe }}
     </article>
     <aside class="d-flex mt-5 col-sm-4">
-        <div class="vr"></div>
-        <div class="ms-5">
-            <h2 class="mb-3">Recent Posts</h2>
-            <ul class="list-unstyled ">
-            {%- for post in collections.post | reverse -%}
-                <li class="mb-4">
-                    <a href="{{ post.url | url }}">{{ post.data.title }}</a>
-                </li>
-            {%- endfor %}
-            </ul>
-        </div>
+      <div class="vr"></div>
+      <div class="ms-5">
+        <h2 class="mb-3">Recent Posts</h2>
+        <ul class="list-unstyled">
+          {%- for post in collections.posts | reverse -%}
+          <li class="mb-4">
+            <a href="{{ post.url | url }}">{{ post.data.title }}</a>
+          </li>
+          {%- endfor %}
+        </ul>
+      </div>
     </aside>
-    </div>
-</div> 
+  </div>
+</div>

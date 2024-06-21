@@ -9,6 +9,7 @@ package-lock.json
 
 # Eleventy
 _site/
+.cache/
 
 # Misc
 .DS_Store

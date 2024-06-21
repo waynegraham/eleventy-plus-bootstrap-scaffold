@@ -1,19 +1,19 @@
-const path = require('path');
+const path = require('path')
 const { resolve } = require('path')
 // markdownit additions
 const markdownIt = require('markdown-it')
 const markdownItAttrs = require('markdown-it-attrs')
 const markdownItAnchor = require('markdown-it-anchor')
-const implicitFigures = require('markdown-it-implicit-figures');
+const implicitFigures = require('markdown-it-implicit-figures')
 
 const striptags = require('striptags')
 const { DateTime } = require('luxon')
 
 const EleventyPluginNavigation = require('@11ty/eleventy-navigation')
 const EleventyPluginRss = require('@11ty/eleventy-plugin-rss')
-const EleventyVitePlugin = require("@11ty/eleventy-plugin-vite");
+const EleventyVitePlugin = require('@11ty/eleventy-plugin-vite')
 
-const pluginImages = require("./eleventy.images.js");
+const pluginImages = require('./eleventy.images.js')
 
 function extractExcerpt(article) {
   if (!article.hasOwnProperty('templateContent')) {
@@ -34,79 +34,104 @@ function extractExcerpt(article) {
   return excerpt
 }
 
-module.exports = function(eleventyConfig) {
-    eleventyConfig.addPassthroughCopy("src/assets/");
-    eleventyConfig.addPassthroughCopy("CNAME");
+module.exports = function (eleventyConfig) {
+  eleventyConfig.addPassthroughCopy('src/assets/')
+  eleventyConfig.addPassthroughCopy('CNAME')
 
-    eleventyConfig.addPlugin(pluginImages);
-    eleventyConfig.addPlugin(EleventyPluginNavigation)
-    eleventyConfig.addPlugin(EleventyPluginRss)
+  eleventyConfig.addPlugin(pluginImages)
+  eleventyConfig.addPlugin(EleventyPluginNavigation)
+  eleventyConfig.addPlugin(EleventyPluginRss)
 
-    eleventyConfig.addPlugin(EleventyVitePlugin, {
-      tempFolderName: ".11ty-vite", // Default name of the temp folder
+  eleventyConfig.addPlugin(EleventyVitePlugin, {
+    tempFolderName: '.11ty-vite', // Default name of the temp folder
 
-      // base: 'creating-access.hbculibraries.org',
+    // base: 'creating-access.hbculibraries.org',
 
-      root: path.resolve(__dirname, "src"),
-  
-      // Options passed to the Eleventy Dev Server
-      // e.g. domdiff, enabled, etc.
-  
-      // Added in Vite plugin v2.0.0
-      serverOptions: {},
-  
-      // Defaults are shown:
-      viteOptions: {
-        // base: githubPath,
-        clearScreen: false,
-        appType: "mpa", // New in v2.0.0
-        assetsInclude: ['**/*.xml', '**/*.txt', 'CNAME'],
-        
-        server: {
-          mode: "development",
-          middlewareMode: true,
-        },
-  
-        build: {
-          mode: "production",
-        },
-  
-        // New in v2.0.0
-        resolve: {
-          alias: {
-            // Allow references to `node_modules` folder directly
-            "/node_modules": path.resolve(".", "node_modules"),
-            "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
-          },
-        },
+    root: path.resolve(__dirname, 'src'),
+
+    // Options passed to the Eleventy Dev Server
+    // e.g. domdiff, enabled, etc.
+
+    // Added in Vite plugin v2.0.0
+    serverOptions: {},
+
+    // Defaults are shown:
+    viteOptions: {
+      // base: githubPath,
+      clearScreen: false,
+      appType: 'mpa', // New in v2.0.0
+      assetsInclude: ['**/*.xml', '**/*.txt', 'CNAME'],
+
+      server: {
+        mode: 'development',
+        middlewareMode: true
       },
-    });
 
-    // filters
-  eleventyConfig.addFilter("head", (array, n) => {
-		if(!Array.isArray(array) || array.length === 0) {
-			return [];
-		}
-		if( n < 0 ) {
-			return array.slice(n);
-		}
+      build: {
+        mode: 'production'
+      },
 
-		return array.slice(0, n);
-	});
+      // New in v2.0.0
+      resolve: {
+        alias: {
+          // Allow references to `node_modules` folder directly
+          '/node_modules': path.resolve('.', 'node_modules'),
+          '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap')
+        }
+      }
+    }
+  })
 
-  eleventyConfig.addFilter("dateToISO", (date) => {
+  // filters
+  eleventyConfig.addFilter('head', (array, n) => {
+    if (!Array.isArray(array) || array.length === 0) {
+      return []
+    }
+    if (n < 0) {
+      return array.slice(n)
+    }
+
+    return array.slice(0, n)
+  })
+
+  eleventyConfig.addFilter('filterTagList', function filterTagList(tags) {
+    return (tags || []).filter(
+      (tag) => ['all', 'nav', 'post', 'posts'].indexOf(tag) === -1
+    )
+  })
+
+  // RandomId function for IDs used by labelled-by
+  // Thanks https://github.com/mozilla/nunjucks/issues/724#issuecomment-207581540
+  // TODO: replace with addNunjucksGlobal? https://github.com/11ty/eleventy/issues/1498
+  eleventyConfig.addFilter('generateRandomIdString', function (prefix) {
+    return prefix + '-' + Math.floor(Math.random() * 1000000)
+  })
+
+  eleventyConfig.addFilter('readableDate', (dateObj, format, zone) => {
+    // Formatting tokens for Luxon: https://moment.github.io/luxon/#/formatting?id=table-of-tokens
+    return DateTime.fromJSDate(dateObj, { zone: zone || 'utc' }).toFormat(
+      format || 'dd LLLL yyyy'
+    )
+  })
+
+  eleventyConfig.addFilter('dateToISO', (date) => {
     return DateTime.fromJSDate(date, { zone: 'utc' }).toISO({
       includeOffset: false,
       suppressMilliseconds: true
     })
-  });
+  })
+
+  eleventyConfig.addFilter('htmlDateString', (dateObj) => {
+    // dateObj input: https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#valid-date-string
+    return DateTime.fromJSDate(dateObj, { zone: 'utc' }).toFormat('yyyy-LL-dd')
+  })
 
   // Customize Markdown library settings:
   eleventyConfig.amendLibrary('md', (mdLib) => {
     mdLib.use(markdownItAttrs)
 
     mdLib.use(implicitFigures, {
-      figcaption: true,  // <figcaption>alternative text</figcaption>, default: false
+      figcaption: true, // <figcaption>alternative text</figcaption>, default: false
       lazyLoading: true,
       copyAttrs: false
     })
@@ -131,26 +156,26 @@ module.exports = function(eleventyConfig) {
     return markdownItRenderer.render(str)
   })
 
-    // shortcodes
-    //https://dev.to/jonoyeong/excerpts-with-eleventy-4od8
-    eleventyConfig.addShortcode('excerpt', (article) => extractExcerpt(article))
+  // shortcodes
+  //https://dev.to/jonoyeong/excerpts-with-eleventy-4od8
+  eleventyConfig.addShortcode('excerpt', (article) => extractExcerpt(article))
 
-    eleventyConfig.addShortcode("currentTime", () => {
-      return DateTime.now().toString();
-    });
+  eleventyConfig.addShortcode('currentTime', () => {
+    return DateTime.now().toString()
+  })
 
-    return {
-        dir: {
-          input: "src",
-          output: "_site",
-          includes: "_includes", // this path is releative to input-path (src/)
-          layouts: "_layouts", // this path is releative to input-path (src/)
-          data: "_data", // this path is releative to input-path (src/)
-        },
-        templateFormats: ["njk", "md"],
-        htmlTemplateEngine: "njk",
-        markdownTemplateEngine: "njk",
-        // important for github pages build (subdirectory):
-        // pathPrefix: "/"
-      };
-};
+  return {
+    dir: {
+      input: 'src',
+      output: '_site',
+      includes: '_includes', // this path is releative to input-path (src/)
+      layouts: '_layouts', // this path is releative to input-path (src/)
+      data: '_data' // this path is releative to input-path (src/)
+    },
+    templateFormats: ['njk', 'md'],
+    htmlTemplateEngine: 'njk',
+    markdownTemplateEngine: 'njk'
+    // important for github pages build (subdirectory):
+    // pathPrefix: "/"
+  }
+}
