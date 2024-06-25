@@ -61,6 +61,7 @@ module.exports = function (eleventyConfig) {
       clearScreen: false,
       appType: 'mpa', // New in v2.0.0
       assetsInclude: ['**/*.xml', '**/*.txt', 'CNAME'],
+      base: '/eleventy-plus-bootstrap-scaffold', // use this instead of pathPrefix
 
       // plugins: [pagefind()],
 
@@ -178,6 +179,6 @@ module.exports = function (eleventyConfig) {
     htmlTemplateEngine: 'njk',
     markdownTemplateEngine: 'njk'
     // important for github pages build (subdirectory):
-    // pathPrefix: "/"
+    // pathPrefix: '/'
   }
 }
