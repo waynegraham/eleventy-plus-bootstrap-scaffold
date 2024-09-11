@@ -4,6 +4,9 @@ import '../scss/styles.scss'
 // Import all of Bootstrap's JS
 import * as bootstrap from 'bootstrap'
 
+// import image preloader
+// import { preloader } from './preloader.js'
+
 // @see https://mdbootstrap.com/docs/standard/extended/back-to-top/
 let mybutton = document.getElementById('btn-back-to-top')
 
