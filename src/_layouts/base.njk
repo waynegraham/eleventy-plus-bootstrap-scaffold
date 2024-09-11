@@ -1,19 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title }}</title>
     <meta name="description" content="{{ site.description }}" />
     {% include 'opengraph.njk' %}
+    <script>
+      document.documentElement.className = 'js'
+      var supportsCssVars = function () {
+        var e,
+          t = document.createElement('style')
+        return (
+          (t.innerHTML = 'root: { --tmp-var: bold; }'),
+          document.head.appendChild(t),
+          (e = !!(
+            window.CSS &&
+            window.CSS.supports &&
+            window.CSS.supports('font-weight', 'var(--tmp-var)')
+          )),
+          t.parentNode.removeChild(t),
+          e
+        )
+      }
+      supportsCssVars() || alert('Please view this demo in a modern browser')
+    </script>
   </head>
-  <body>
+  <body class="loading">
+    <button type="button" class="btn btn-danger btn-lg" id="btn-back-to-top">
+      <i class="bi bi-arrow-up"></i>
+    </button>
     <main data-pagefind-body>
       {% include 'header.njk' %}
       {{ content | safe }}
     </main>
 
     {% include 'footer.njk' %}
+    <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
     <script type="module" src="{{ '/assets/js/main.js' | url }}"></script>
   </body>
 </html>

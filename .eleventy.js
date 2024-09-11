@@ -79,7 +79,8 @@ module.exports = function (eleventyConfig) {
         alias: {
           // Allow references to `node_modules` folder directly
           '/node_modules': path.resolve('.', 'node_modules'),
-          '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap')
+          '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+          '~icons': path.resolve(__dirname, 'node_modules/bootstrap-icons')
         }
       }
     }
