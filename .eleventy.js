@@ -44,9 +44,7 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.addPlugin(EleventyVitePlugin, {
     tempFolderName: '.11ty-vite', // Default name of the temp folder
-
-    // base: 'creating-access.hbculibraries.org',
-
+    
     root: path.resolve(__dirname, 'src'),
 
     // Options passed to the Eleventy Dev Server
