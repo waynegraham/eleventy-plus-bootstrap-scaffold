@@ -34,7 +34,7 @@ eleventyNavigation:
         </a>
       </div>
       <div class="col-auto d-none d-lg-block">
-        {% image post.data.image_path, post.data.title, 'img-fluid' %}
+        <img src="{{post.data.image_path}}" alt="{{ post.data.title }}" class="img-fluid" />
       </div>
     </div>
   </div>

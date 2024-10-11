@@ -1,12 +1,12 @@
 // See https://getbootstrap.com/docs/5.3/customize/sass/
 
 // Import all of Bootstrap's CSS
-@import '~bootstrap/scss/bootstrap';
+@import '/node_modules/bootstrap/scss/bootstrap';
 
 // Bootstrap Icons
-@import '~icons/font/bootstrap-icons.css';
+@import '/node_modules/bootstrap-icons/font/bootstrap-icons.css';
 
-@import 'loader';
+// @import 'loader';
 
 #btn-back-to-top {
   position: fixed;
